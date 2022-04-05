@@ -32,9 +32,21 @@ public class AdminFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
-        HttpServletResponse httpRespond = (HttpServletResponse)response;
+        HttpServletResponse httpResponse = (HttpServletResponse)response;
         
-        //check if the suer is an admin or not.
+        //check if the user is an admin or not.
+        
+        String email = (String)httpRequest.getSession().getAttribute("email");
+        Integer roleId = (Integer)httpRequest.getSession().getAttribute("role");
+        if(roleId == null){
+            httpResponse.sendRedirect("login");
+        }
+        else if (roleId == 1){
+            chain.doFilter(request, response);
+        }
+        else {
+            httpResponse.sendRedirect("notes");
+        }
         
         chain.doFilter(request, response);
        
